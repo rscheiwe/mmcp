@@ -120,6 +120,9 @@ async def mcp_call_tool(tool_name: str, parameters: Dict[str, Any]):
             return result
 ```
 
+
+Additionally, the `tests/test_mcp_list_tools.py` file can be run to test the `list_tools` method, for a sanity check. Just make sure the server is running.
+
 **Note:** More extensive documentation and usage is on the way.
 
 ## Development

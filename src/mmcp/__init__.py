@@ -211,6 +211,12 @@ def copy_template(
                         import shutil
                         shutil.copy2(service_file, services_target / service_file.name)
 
+        # Set up tests directory
+        template_tests_dir = template_dir / "tests"
+        if template_tests_dir.exists():
+            tests_target = path / "tests"
+            shutil.copytree(template_tests_dir, tests_target, dirs_exist_ok=True)
+
     except Exception as e:
         click.echo(f"❌ Error: Failed to template and write files: {e}", err=True)
         sys.exit(1)
