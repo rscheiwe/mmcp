@@ -14,7 +14,7 @@ The purpose of this project is to provide a more streamlined and user-friendly e
 
 ```bash
 >> pip install mmcp
->> mmcp create --name my-mmcp-server
+>> mmcp create-mmcp --name my-mmcp-server
 >> cd my-mmcp-server
 >> mmcp run server
 ```
@@ -129,6 +129,7 @@ To run the project, use the following command:
 ```bash
 >> poetry install --no-cache
 >> poetry shell
+>> poetry run mmcp create-mmcp --name my_project
 ```
 
 To build and run the project, use the following command:
