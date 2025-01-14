@@ -1,0 +1,92 @@
+from mcp.server.sse import SseServerTransport
+from starlette.applications import Starlette
+from starlette.routing import Route
+from starlette.responses import Response
+import uvicorn
+from .services.tools import ToolService
+from .app import server
+
+# Initialize core services
+sse = SseServerTransport("/messages")
+tool_service = ToolService()
+
+
+def post_init():
+    """Register tools after initialization.
+    
+    This function is called after server initialization to register any tools that should be available.
+    Tools must inherit from BaseTool and implement the required interface.
+    
+    Example:
+        from .tools.mytool import MyTool
+        tool_service.register_tool(MyTool())
+        
+    See tools.base.BaseTool for the required interface that tools must implement.
+    """
+    {% if with_examples %}
+    from .tools.weather import WeatherTool
+    tool_service.register_tool(WeatherTool())
+    {% else %}
+    pass
+    {% endif %}
+
+
+def get_routes():
+    return [
+        Route("/sse", endpoint=handle_sse),
+        Route("/messages", endpoint=handle_messages, methods=["POST"]),
+    ]
+
+
+async def handle_sse(request):
+    async with sse.connect_sse(
+        request.scope, request.receive, request._send
+    ) as streams:
+        await server.run(
+            streams[0], streams[1], server.create_initialization_options()
+        )
+
+
+async def handle_messages(request):
+    response = Response("", status_code=202)
+
+    async def send_wrapper(message):
+        if (
+            message["type"] != "http.response.start"
+            and message["type"] != "http.response.body"
+        ):
+            await request._send(message)
+
+    await sse.handle_post_message(request.scope, request.receive, send_wrapper)
+    return response
+
+
+@server.list_tools()
+async def handle_list_tools():
+    return await tool_service.list_tools()
+
+@server.call_tool()
+async def handle_call_tool(name: str, arguments: dict | None):
+    return await tool_service.execute_tool(name, arguments or {})
+
+
+def create_app():
+    post_init()  # Register tools after initialization
+    return Starlette(
+        debug=True,
+        routes=get_routes()
+    )
+
+mmcp_app = create_app()
+
+def main() -> int:
+    return uvicorn.run(
+        mmcp_app,
+        host="0.0.0.0",
+        port=8080,
+        log_level="info"
+    )
+
+if __name__ == "__main__":
+    import sys
+    sys.exit(main())

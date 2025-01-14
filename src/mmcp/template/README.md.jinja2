@@ -1,0 +1,43 @@
+# {{server_name}} mMCP Server
+
+{{server_description}}
+
+## Components
+
+Run locally with:
+
+```bash 
+>> poetry install
+>> poetry shell
+>> poetry run python -m {{server_name}}.server 
+```
+
+(If attempting to run with and running into problems with `python -m newis.server`, check your aliased Python versions against the virtual environment Python version.)
+
+Run via Docker with:
+
+```bash 
+>> docker compose up -d --build
+```
+
+Example `launch.json` for VSCode:
+
+```json
+{
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "name": "Python Debugger: Current File",
+            "type": "debugpy",
+            "request": "launch",
+            "module": "{{server_name}}.server",
+            "justMyCode": true,
+            "python": "${command:python.interpreterPath}",
+            "env": {
+                "PYTHONPATH": "${workspaceFolder}/src"
+            },
+            "cwd": "${workspaceFolder}"
+        }
+    ]
+}
+```

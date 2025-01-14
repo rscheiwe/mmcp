@@ -1,0 +1,41 @@
+[tool.poetry]
+name = "mmcp"
+version = "0.1.0"
+description = "Create a low-code, SSE-transport-enabled Model Context Protocol server project from a template, packaged with Docker for easy deployment and orchestration."
+authors = ["Richard S. <rscheiwe.dev@gmail.com>"]
+maintainers = ["Richard Scheiwe <rscheiwe.dev@gmail.com>"]
+readme = "README.md"
+packages = [
+    { include = "mmcp", from = "src" }
+]
+include = [
+    "src/mmcp/template/**/*"
+]
+keywords = ["mcp", "llm", "automation", "sse", "server", "template", "low-code", "microservice", "api", "generative-ai", "ai"]
+license = "MIT"
+classifiers = [
+    "Development Status :: 3 - Alpha",
+    "Intended Audience :: Developers",
+    "License :: OSI Approved :: MIT License",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.10",
+]
+
+[tool.poetry.dependencies]
+python = ">=3.10"
+click = ">=8.1.7"
+jinja2 = ">=3.1.4"
+packaging = ">=24.2"
+toml = ">=0.10.2"
+
+[tool.poetry.scripts]
+mmcp = "mmcp.cli:main"
+
+[tool.poetry.urls]
+Homepage = "https://github.com/rscheiwe/mmcp"
+Repository = "https://github.com/rscheiwe/mmcp"
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
+

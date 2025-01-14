@@ -1,0 +1,11 @@
+version: '3.8'
+
+services:
+  {{server_name}}-mmcp-server:
+    build: .
+    ports:
+      - "8080:8080"
+    command: ["python", "-m", "{{server_name}}.server"]
+    environment:
+      - PYTHONUNBUFFERED=1
+
